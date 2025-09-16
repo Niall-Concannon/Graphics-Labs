@@ -17,7 +17,7 @@
 
   <body>
 
-    <canvas id="myCanvas" width="200" height="100"></canvas>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
 
     <script type="text/javascript">
 		// Gets a handle to the element with id canvasOne.
@@ -30,12 +30,27 @@
     ctx.fillStyle = "rgb(0, 0, 255)";
 		
 		// Create a filled rectangle
-    ctx.fillRect(0, 0, 200, 100);
+    a = 0;
+    b = 0;
+    c = 200;
+    d = 100;
+    ctx.fillRect(a, b, c, d);
 
     // Add name as text
     ctx.font = "75px Arial"
     ctx.fillStyle = "white";
     ctx.fillText("Niall", 20, 75);
+
+    // Triangle
+    ctx.strokeStyle = "rgb(255,0,0)";
+    ctx.fillStyle = "green";
+    ctx.beginPath();
+    ctx.moveTo(350,20); 
+    ctx.lineTo(450,150);
+    ctx.lineTo(250,150);
+    ctx.lineTo(350,20);
+    ctx.stroke();
+    ctx.fill();
     </script>
 
   </body>
