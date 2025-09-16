@@ -7,25 +7,29 @@
     <title>Canvas</title>
 
     <style type="text/css">
-	
+      canvas {
+        border: 5px;
+      }
     </style>
 
   </head>
 
   <body>
 
-    <canvas id="canvasOne"></canvas>
+    <canvas id="myCanvas" width="200" height="100"></canvas>
 
     <script type="text/javascript">
 		// Gets a handle to the element with id canvasOne.
+    const canvas = document.getElementById("myCanvas");
 		
 		// Set the canvas up for drawing in 2D.
+    const ctx = canvas.getContext("2d");
 		
 		// Set the fill colour to bright red.
+    ctx.fillStyle = "red";
 		
-		// Create a filled rectangle 
-		
-	  
+		// Create a filled rectangle
+    ctx.fillRect(0, 0, 150, 75);
 		
     </script>
 
