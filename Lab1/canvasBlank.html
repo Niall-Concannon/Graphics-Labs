@@ -82,10 +82,29 @@
     ctx.fill();
 
     // Pac-Man code
+    // Circle
     ctx.strokeStyle = "rgb(0,0,0)";
     ctx.fillStyle = "rgb(255,255,0)";
     ctx.beginPath();
-    ctx.arc(150,400,75,0,2*Math.PI);
+    ctx.arc(150,400,75,(Math.PI/180)*315,(Math.PI/180)*225,false);
+    ctx.stroke();
+    ctx.fill();
+
+    // Mouth
+    ctx.strokeStyle = "rgb(0,0,0)";
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.beginPath();
+    ctx.moveTo(150,400);
+    x = (75 * Math.cos((Math.PI/180)*225)) + 150;
+    y = (75 * Math.sin((Math.PI/180)*225)) + 400;
+    ctx.lineTo(x,y);
+    ctx.moveTo(150,400);
+    x = (75 * Math.cos((Math.PI/180)*315)) + 150;
+    y = (75 * Math.sin((Math.PI/180)*315)) + 400;
+    ctx.lineTo(x,y);
+    x = (75 * Math.cos((Math.PI/180)*225)) + 150;
+    y = (75 * Math.sin((Math.PI/180)*225)) + 400;
+    ctx.lineTo(x,y);
     ctx.stroke();
     ctx.fill();
 
