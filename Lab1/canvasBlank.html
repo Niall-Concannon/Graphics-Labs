@@ -8,7 +8,8 @@
 
     <style type="text/css">
       canvas {
-        border: 5px;
+        border: 1px;
+        border-style: solid;
       }
     </style>
 
@@ -29,8 +30,12 @@
     ctx.fillStyle = "red";
 		
 		// Create a filled rectangle
-    ctx.fillRect(0, 0, 150, 75);
-		
+    ctx.fillRect(0, 0, 200, 100);
+
+    // Add name as text
+    ctx.font = "75px Arial"
+    ctx.fillStyle = "black";
+    ctx.fillText("Niall", 20, 75);
     </script>
 
   </body>
