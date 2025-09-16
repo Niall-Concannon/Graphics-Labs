@@ -54,7 +54,7 @@
 
     // Circles
     ctx.strokeStyle = "rgb(0,0,0)";
-    ctx.fillStyle = "rgb(255,255,0)"
+    ctx.fillStyle = "rgb(255,255,0)";
     ctx.beginPath();
     ctx.arc(100,250,40,0,2*Math.PI);
     ctx.stroke();
@@ -64,6 +64,20 @@
     ctx.fillStyle = "rgb(255,0,0)"
     ctx.beginPath();
     ctx.arc(200,250,40,0,2*Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    // Triangle in a square
+    ctx.fillStyle = "rgb(150,150,150)";
+    ctx.fillRect(300,200,150,150)
+
+    ctx.strokeStyle = "rgb(0,0,0)";
+    ctx.fillStyle = "rgba(200,0,0,0.5)";
+    ctx.beginPath();
+    ctx.moveTo(375,200);
+    ctx.lineTo(450,350);
+    ctx.lineTo(300,350);
+    ctx.lineTo(375,200)
     ctx.stroke();
     ctx.fill();
     </script>
