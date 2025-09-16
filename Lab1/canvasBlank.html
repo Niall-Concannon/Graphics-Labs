@@ -27,7 +27,7 @@
     const ctx = canvas.getContext("2d");
 		
 		// Set the fill colour to bright red.
-    ctx.fillStyle = "rgb(0, 0, 255)";
+    ctx.fillStyle = "rgba(0, 0, 255,0.7)";
 		
 		// Create a filled rectangle
     a = 0;
@@ -43,12 +43,12 @@
 
     // Triangle
     ctx.strokeStyle = "rgb(255,0,0)";
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "rgba(0,255,0,0.4)";
     ctx.beginPath();
-    ctx.moveTo(350,20); 
-    ctx.lineTo(450,150);
-    ctx.lineTo(250,150);
-    ctx.lineTo(350,20);
+    ctx.moveTo(225,20); 
+    ctx.lineTo(325,150);
+    ctx.lineTo(125,150);
+    ctx.lineTo(225,20);
     ctx.stroke();
     ctx.fill();
     </script>
