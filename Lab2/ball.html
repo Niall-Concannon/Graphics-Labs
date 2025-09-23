@@ -33,38 +33,60 @@
       
       // The vertical location of the ball.
       var y = 10;
-
+      
+      // Variables for the object
       var x = 50;
       var r = 5;
       var yspeed = 5;
       var xspeed = 10;
+
+      // Ball class
+      class Ball {
+        constructor(x, y, xspeed, yspeed, r) {
+          this.x = x;
+          this.y = y;
+          this.xspeed = xspeed;
+          this.yspeed = yspeed;
+          this.r = r;
+        }
+
+        // Move method used to move the ball
+        move() {
+          x += xspeed;
+          y += yspeed;
+          
+          // if ball hits top or bottom
+          if(y == 400) {
+            yspeed = -5; // Reverse the speed
+          } else if(y == 0) {
+            yspeed = 5;
+          }
+
+          // if ball hits left or right
+          if(x == 400) {
+            xspeed = -10;
+          } else if(x == 0) {
+            xspeed = 10;
+          }
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, 2 * Math.PI);
+          ctx.stroke();
+        }
+      }
+
+      // Create ball object
+      const b1 = new Ball(x, y, xspeed, yspeed, r);
       
       // A function to repeat every time the animation loops.
       function repeatme() {
-        // Clear the canvas everytime
-        ctx.clearRect(0, 0, 400, 400);
+        ctx.clearRect(0, 0, 400, 400); // Clear the canvas everytime
         
-        // Draw the ball (stroked, not filled).
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, 2 * Math.PI);
-        ctx.stroke();
+        b1.draw(); // Draw the ball (stroked, not filled).
         
-        // Update the y location.
-        y += yspeed;
-        x += xspeed;
-
-        // if statement for ball hitting the bottom
-        if(y == 400) {
-          yspeed = -5; // Reverse the speed
-        } else if(y == 0) {
-          yspeed = 5;
-        }
-
-        if(x == 400) {
-          xspeed = -10;
-        } else if(x == 0) {
-          xspeed = 10;
-        }
+        b1.move(); // Update the y location.
 
         window.requestAnimationFrame(repeatme);
       }
