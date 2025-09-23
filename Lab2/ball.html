@@ -53,7 +53,9 @@
 
         // if statement for ball hitting the bottom
         if(y == 400) {
-          speed = 0;
+          speed = -5; // Reverse the speed
+        } else if(y == 0) {
+          speed = 5;
         }
 
         window.requestAnimationFrame(repeatme);
