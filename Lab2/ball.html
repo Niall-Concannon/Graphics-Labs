@@ -23,7 +23,7 @@
 
     <h1>Niall Concannon</h1>
 
-    <canvas id="canvas-for-ball" width="400" height="300"></canvas>
+    <canvas id="canvas-for-ball" width="400" height="400"></canvas>
 
     <script type="text/javascript">
       // Gets a handle to the element with id canvasOne.
@@ -36,12 +36,12 @@
 
       var x = 50;
       var r = 3;
-      var speed = 4;
+      var speed = 5;
       
       // A function to repeat every time the animation loops.
       function repeatme() {
         // Clear the canvas everytime
-        ctx.clearRect(0, 0, 400, 300);
+        ctx.clearRect(0, 0, 400, 400);
         
         // Draw the ball (stroked, not filled).
         ctx.beginPath();
@@ -50,7 +50,12 @@
         
         // Update the y location.
         y += speed;
-        
+
+        // if statement for ball hitting the bottom
+        if(y == 400) {
+          speed = 0;
+        }
+
         window.requestAnimationFrame(repeatme);
       }
       
