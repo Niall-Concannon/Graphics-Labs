@@ -35,8 +35,9 @@
       var y = 10;
 
       var x = 50;
-      var r = 3;
-      var speed = 5;
+      var r = 5;
+      var yspeed = 5;
+      var xspeed = 10;
       
       // A function to repeat every time the animation loops.
       function repeatme() {
@@ -49,13 +50,20 @@
         ctx.stroke();
         
         // Update the y location.
-        y += speed;
+        y += yspeed;
+        x += xspeed;
 
         // if statement for ball hitting the bottom
         if(y == 400) {
-          speed = -5; // Reverse the speed
+          yspeed = -5; // Reverse the speed
         } else if(y == 0) {
-          speed = 5;
+          yspeed = 5;
+        }
+
+        if(x == 400) {
+          xspeed = -10;
+        } else if(x == 0) {
+          xspeed = 10;
         }
 
         window.requestAnimationFrame(repeatme);
