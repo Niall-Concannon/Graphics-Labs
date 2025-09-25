@@ -23,7 +23,7 @@
 
     <h1>Niall Concannon</h1>
 
-    <canvas id="canvas-for-ball" width="400" height="400"></canvas>
+    <canvas id="canvas-for-ball" width="400" height="500"></canvas>
 
     <script type="text/javascript">
       // Gets a handle to the element with id canvasOne.
@@ -31,15 +31,6 @@
       // Get a 2D context for the canvas.
       var ctx = canvas.getContext("2d");
       
-      // The vertical location of the ball.
-      var y = 10;
-      
-      // Variables for the object
-      var x = 50;
-      var r = 5;
-      var yspeed = 5;
-      var xspeed = 10;
-
       // Ball class
       class Ball {
         constructor(x, y, xspeed, yspeed, r) {
@@ -52,37 +43,37 @@
 
         // Move method used to move the ball
         move() {
-          x += xspeed;
-          y += yspeed;
+          this.x += this.xspeed;
+          this.y += this.yspeed;
           
           // if ball hits top or bottom
-          if(y == 400) {
-            yspeed = -5; // Reverse the speed
-          } else if(y == 0) {
-            yspeed = 5;
+          if(this.y == 500 - this.r) {
+            this.yspeed = -5; // Reverse the speed
+          } else if(this.y == 0 + this.r) {
+            this.yspeed = 10;
           }
 
           // if ball hits left or right
-          if(x == 400) {
-            xspeed = -10;
-          } else if(x == 0) {
-            xspeed = 10;
+          if(this.x == 400 - this.r) {
+            this.xspeed = -10;
+          } else if(this.x == 0 + this.r) {
+            this.xspeed = 5;
           }
         }
 
         draw() {
           ctx.beginPath();
-          ctx.arc(x, y, r, 0, 2 * Math.PI);
+          ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
           ctx.stroke();
         }
       }
 
       // Create ball object
-      const b1 = new Ball(x, y, xspeed, yspeed, r);
+      const b1 = new Ball(50, 10, 10, 5, 20);
       
       // A function to repeat every time the animation loops.
       function repeatme() {
-        ctx.clearRect(0, 0, 400, 400); // Clear the canvas everytime
+        ctx.clearRect(0, 0, 400, 500); // Clear the canvas everytime
         
         b1.draw(); // Draw the ball (stroked, not filled).
         
