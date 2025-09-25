@@ -63,7 +63,18 @@
 
         draw() {
           ctx.beginPath();
-          ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+          ctx.arc(this.x, this.y, this.r, (7*Math.PI)/4,(5*Math.PI)/4,false);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(this.x,this.y);
+          var xline = (this.r * Math.cos((5*Math.PI)/4)) + this.x;
+          var yline = (this.r * Math.sin((5*Math.PI)/4)) + this.y;
+          ctx.lineTo(xline, yline);
+          ctx.moveTo(this.x,this.y);
+          var xline = (this.r * Math.cos((7*Math.PI)/4)) + this.x;
+          var yline = (this.r * Math.sin((7*Math.PI)/4)) + this.y;
+          ctx.lineTo(xline, yline);
           ctx.stroke();
         }
       }
