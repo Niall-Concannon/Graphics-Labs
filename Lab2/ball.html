@@ -23,13 +23,19 @@
 
     <h1>Niall Concannon</h1>
 
-    <canvas id="canvas-for-ball" width="400" height="500"></canvas>
+    <canvas id="canvas-for-ball" width="400" height="600"></canvas>
 
     <script type="text/javascript">
       // Gets a handle to the element with id canvasOne.
       var canvas = document.getElementById("canvas-for-ball");
       // Get a 2D context for the canvas.
       var ctx = canvas.getContext("2d");
+
+      // Variables for rotating the ball
+      var i = 0.2;
+      var rotate = true;
+      var clockwise = 0.2;
+      var anticlockwise = -0.2;
       
       // Ball class
       class Ball {
@@ -47,48 +53,78 @@
           this.y += this.yspeed;
           
           // if ball hits top or bottom
-          if(this.y == 500 - this.r) {
+          if(this.y == 600 - this.r) {
             this.yspeed = -5; // Reverse the speed
           } else if(this.y == 0 + this.r) {
-            this.yspeed = 10;
+            this.yspeed = 5;
           }
 
           // if ball hits left or right
           if(this.x == 400 - this.r) {
-            this.xspeed = -10;
+            this.xspeed = -5;
           } else if(this.x == 0 + this.r) {
             this.xspeed = 5;
           }
         }
-
+        
         draw() {
+          ctx.fillStyle = "rgb(255,255,0)";
+          // Pacman circle
           ctx.beginPath();
-          ctx.arc(this.x, this.y, this.r, (7*Math.PI)/4,(5*Math.PI)/4,false);
+          ctx.moveTo(this.x, this.y);
+          ctx.arc(this.x, this.y, this.r, (7*Math.PI)/4+i,(5*Math.PI)/4+i,false);
+          ctx.closePath();
+          ctx.fill();
           ctx.stroke();
 
+          // Pacman mouth
           ctx.beginPath();
           ctx.moveTo(this.x,this.y);
-          var xline = (this.r * Math.cos((5*Math.PI)/4)) + this.x;
-          var yline = (this.r * Math.sin((5*Math.PI)/4)) + this.y;
+          var xline = (this.r * Math.cos((5*Math.PI)/4+i)) + this.x;
+          var yline = (this.r * Math.sin((5*Math.PI)/4+i)) + this.y;
           ctx.lineTo(xline, yline);
           ctx.moveTo(this.x,this.y);
-          var xline = (this.r * Math.cos((7*Math.PI)/4)) + this.x;
-          var yline = (this.r * Math.sin((7*Math.PI)/4)) + this.y;
+          var xline = (this.r * Math.cos((7*Math.PI)/4+i)) + this.x;
+          var yline = (this.r * Math.sin((7*Math.PI)/4+i)) + this.y;
           ctx.lineTo(xline, yline);
           ctx.stroke();
+
+          // if statement to check whether to rotate clockwise or anticlockwise based on the boolean value
+          if (rotate == true) {
+            i += clockwise;
+          } else if (rotate == false) {
+            i += anticlockwise;
+          }
+        }
+
+        // Rotate method rotates the ball clockwise or anticlockwise when ball hits the canvas border
+        rotate() {
+          // if ball hits border
+          if (this.y == 600 -this.r || this.y == 0 + this.r || this.x == 400 - this.r || this.x == 0 + this.r) {
+            // if clockwise make anticlockwise
+            if (rotate == true) {
+              rotate = false;
+            } 
+            // else if anticlockwise make clockwise
+            else if (rotate == false) {
+              rotate = true;
+            }
+          }
         }
       }
 
       // Create ball object
-      const b1 = new Ball(50, 10, 10, 5, 20);
+      const b1 = new Ball(50, 10, 5, 5, 20);
       
       // A function to repeat every time the animation loops.
       function repeatme() {
-        ctx.clearRect(0, 0, 400, 500); // Clear the canvas everytime
+        ctx.clearRect(0, 0, 400, 600); // Clear the canvas everytime
         
         b1.draw(); // Draw the ball (stroked, not filled).
         
         b1.move(); // Update the y location.
+
+        b1.rotate(); // Rotates the ball
 
         window.requestAnimationFrame(repeatme);
       }
