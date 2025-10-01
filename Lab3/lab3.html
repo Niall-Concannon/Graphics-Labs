@@ -36,15 +36,20 @@
         }
         
         canvas.addEventListener("mousemove", function(event) { 
-            // To get the actual coordinates for mouse position | minus client by canvasPosition
+            // To get the actual coordinates for mouse position - minus client by canvasPosition
             var mouse = {
                 x: event.clientX - canvasPosition.x,
                 y: event.clientY - canvasPosition.y
             }
 
+            // if statement to stop at bottom of the canvas
             if (mouse.y < 340) {
-                p1.y = mouse.y;
-            }            
+                if( mouse.x < 150) { // If close to right paddle
+                    p2.y = mouse.y;
+                } else if (mouse.x > 250) { // If close to left paddle
+                    p1.y = mouse.y;
+                }
+            }
         });
 
         // ---------- KEYBOARD CODE ----------        
@@ -194,6 +199,7 @@
                 this.height = height;
             }
 
+            // Draws the paddles
             draw() {
                 ctx.fillStyle = "rgb(175,175,175)";
                 ctx.moveTo(this.x, this.y);
@@ -210,9 +216,9 @@
         function repeatme() {
             ctx.clearRect(0, 0, 400, 400); // Clear the canvas everytime
             
-            p1.draw(); // Draw the paddle
+            p1.draw(); // Draw the first paddle (right one)
 
-            p2.draw(); // Draw second paddle
+            p2.draw(); // Draw second paddle (left one)
             
             b1.draw(); // Draw the ball (stroked, not filled).
             
