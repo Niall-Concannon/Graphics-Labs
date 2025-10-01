@@ -35,20 +35,16 @@
             y: canvas.offsetTop
         }
         
-        canvas.addEventListener("click", function(event) { 
+        canvas.addEventListener("mousemove", function(event) { 
             // To get the actual coordinates for mouse position | minus client by canvasPosition
             var mouse = {
                 x: event.clientX - canvasPosition.x,
                 y: event.clientY - canvasPosition.y
             }
 
-            ctx.beginPath();
-            ctx.arc(mouse.x, mouse.y, 6, 0, 2 * Math.PI);
-            ctx.fill();
-            
-            noClicks += 1;
-            console.log(noClicks);
-            console.log(event);
+            if (mouse.y < 340) {
+                p1.y = mouse.y;
+            }            
         });
 
         // ---------- KEYBOARD CODE ----------        
@@ -187,7 +183,7 @@
 
         // Create ball object
         const b1 = new Ball(50, 10, 2, 2, 10);
-        const p1 = new Paddle(350, 175, 10, 60);
+        const p1 = new Paddle(375, 175, 10, 60);
         
         // A function to repeat every time the animation loops.
         function repeatme() {
