@@ -19,7 +19,7 @@
 
     <h1>Niall Concannon</h1>
 
-    <canvas id="canvas-for-ball" width="300" height="400"></canvas>
+    <canvas id="canvas-for-ball" width="400" height="400"></canvas>
 
     <script type="text/javascript">
 		// Gets a handle to the element with id canvasOne.
@@ -63,23 +63,23 @@
 		$(document.body).on('keydown', function(e) {
 			console.log(e.which);
 			switch (e.which) {
-			// key code for left arrow
-			case 37:
-				console.log('left arrow key pressed!');
+            // Key code for up arrow
+            case 38:
+                console.log('up arrow key pressed!');
                 
                 // If hits the canvas border
-                if (p1.x != 0) {
-                    p1.x += -5;
+                if (p1.y != 0) {
+                    p1.y += -5;
                 }
 				break;
 
-			// key code for right arrow
-			case 39:
-				console.log('right arrow key pressed!');
+            // key code for down arrow
+			case 40:
+				console.log('down arrow key pressed!');
                 
                 // if hits the canvas border
-                if (p1.x + p1.width != 300) {
-                    p1.x += 5;
+                if (p1.y + p1.height != 400) {
+                    p1.y += 5;
                 }
 				break;
 			}
@@ -116,7 +116,7 @@
                 }
 
                 // if ball hits left or right
-                if(this.x == 300 - this.r) {
+                if(this.x == 400 - this.r) {
                     this.xspeed = -2;
                 } else if(this.x == 0 + this.r) {
                     this.xspeed = 2;
@@ -156,7 +156,7 @@
             // Rotate method rotates the ball clockwise or anticlockwise when ball hits the canvas border
             rotate() {
                 // if ball hits border
-                if (this.y == 400 -this.r || this.y == 0 + this.r || this.x == 300 - this.r || this.x == 0 + this.r) {
+                if (this.y == 400 -this.r || this.y == 0 + this.r || this.x == 400 - this.r || this.x == 0 + this.r) {
                     // if clockwise make anticlockwise
                     if (rotate == true) {
                     rotate = false;
@@ -187,11 +187,11 @@
 
         // Create ball object
         const b1 = new Ball(50, 10, 2, 2, 10);
-        const p1 = new Paddle(125, 350, 50, 10);
+        const p1 = new Paddle(350, 175, 10, 60);
         
         // A function to repeat every time the animation loops.
         function repeatme() {
-            ctx.clearRect(0, 0, 300, 400); // Clear the canvas everytime
+            ctx.clearRect(0, 0, 400, 400); // Clear the canvas everytime
             
             p1.draw(); // Draw the paddle
             
