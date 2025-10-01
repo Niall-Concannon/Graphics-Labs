@@ -78,6 +78,26 @@
                     p1.y += 5;
                 }
 				break;
+
+            // Key code for W key
+            case 87:
+                console.log('W key pressed!');
+                
+                // If hits the canvas border
+                if (p2.y != 0) {
+                    p2.y += -5;
+                }
+				break;
+
+            // key code for S key
+			case 83:
+				console.log('S key pressed!');
+                
+                // if hits the canvas border
+                if (p2.y + p2.height != 400) {
+                    p2.y += 5;
+                }
+				break;
 			}
 		});
 
@@ -184,12 +204,15 @@
         // Create ball object
         const b1 = new Ball(50, 10, 2, 2, 10);
         const p1 = new Paddle(375, 175, 10, 60);
+        const p2 = new Paddle(10, 175, 10, 60)
         
         // A function to repeat every time the animation loops.
         function repeatme() {
             ctx.clearRect(0, 0, 400, 400); // Clear the canvas everytime
             
             p1.draw(); // Draw the paddle
+
+            p2.draw(); // Draw second paddle
             
             b1.draw(); // Draw the ball (stroked, not filled).
             
