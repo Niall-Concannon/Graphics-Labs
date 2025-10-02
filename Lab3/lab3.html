@@ -88,14 +88,18 @@
 			case 65:
 				console.log('A key pressed!');
                 
-                i += -0.5;
+                // turn anticlockwise
+                rotate = false;
+                i += -0.1;
 				break;
 
             // key code for down arrow
 			case 68:
 				console.log('D key pressed!');
                 
-                i += 0.5;
+                // turn clockwise
+                rotate = true;
+                i += 0.1;
 				break;
 
             // Key code for W key
@@ -127,6 +131,7 @@
         var rotate = true;
         var clockwise = 0.1;
         var anticlockwise = -0.1;
+        var gravity = 0.4;
         
         // Ball class
         class Ball {
@@ -141,19 +146,22 @@
             // Move method used to move the ball
             move() {
                 this.x += this.xspeed;
+                this.yspeed += gravity;
                 this.y += this.yspeed;
                 
                 // if ball hits top or bottom
-                if(this.y == 400 - this.r) {
-                    this.yspeed = -2; // Reverse the speed
-                } else if(this.y == 0 + this.r) {
-                    this.yspeed = 2;
+                if(this.y >= 400 - this.r) {
+                    this.y = 400 - this.r; // Reposition so it doesn't go out of border
+                    this.yspeed = -this.yspeed * 0.9; // slow down the speed with 0.9
+                } else if(this.y <= 0 + this.r) {
+                    this.y = 0 + this.r;
+                    this.yspeed = -this.yspeed * 0.9;
                 }
 
                 // if ball hits left or right
-                if(this.x == 400 - this.r) {
+                if(this.x >= 400 - this.r) {
                     this.xspeed = -2;
-                } else if(this.x == 0 + this.r) {
+                } else if(this.x <= 0 + this.r) {
                     this.xspeed = 2;
                 }
             }
@@ -222,7 +230,7 @@
         }
 
         // Create ball object
-        const b1 = new Ball(50, 10, 2, 2, 10);
+        const b1 = new Ball(50, 50, 2, 2, 10);
         const p1 = new Paddle(375, 175, 10, 60);
         const p2 = new Paddle(10, 175, 10, 60)
         
