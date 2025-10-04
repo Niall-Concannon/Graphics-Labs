@@ -160,9 +160,11 @@
 
                 // if ball hits left or right
                 if(this.x >= 400 - this.r) {
-                    this.xspeed = -2;
+                    this.x = 400 -this.r; // Reposition so it doesn't go out of border
+                    this.xspeed = -this.xspeed * 0.5; // slow down the speed with 0.9
                 } else if(this.x <= 0 + this.r) {
-                    this.xspeed = 2;
+                    this.x = 0 + this.r;
+                    this.xspeed = -this.xspeed * 0.5;
                 }
             }
             
@@ -198,15 +200,25 @@
 
             // Rotate method rotates the ball clockwise or anticlockwise when ball hits the canvas border
             rotate() {
-                // if ball hits border
-                if (this.y == 400 -this.r || this.y == 0 + this.r || this.x == 400 - this.r || this.x == 0 + this.r) {
+                // if ball hits border top or bottom
+                // Made it so when the yspeed of the ball is around 0 it stops rotating it to prevent it from being in a static position
+                if ((this.yspeed > 0.4 || this.yspeed < -0.4) && (this.y == 400 - this.r || this.y == 0 + this.r)) {
                     // if clockwise make anticlockwise
                     if (rotate == true) {
-                    rotate = false;
+                        rotate = false;
                     } 
                     // else if anticlockwise make clockwise
                     else if (rotate == false) {
-                    rotate = true;
+                        rotate = true;
+                    }
+                } else if (this.x == 400 - this.r || this.x == 0 + this.r) { // left or right of canvas
+                    // if clockwise make anticlockwise
+                    if (rotate == true) {
+                        rotate = false;
+                    } 
+                    // else if anticlockwise make clockwise
+                    else if (rotate == false) {
+                        rotate = true;
                     }
                 }
             }
