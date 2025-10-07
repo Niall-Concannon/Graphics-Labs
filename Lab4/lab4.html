@@ -43,7 +43,7 @@
             }
 
             // if statement to stop at bottom of the canvas
-            if (mouse.y < 340) {
+            if (mouse.y < 400 - p1.r && mouse.y > 0 + p1.r) {
                 if( mouse.x < 150) { // If close to right paddle
                     p2.y = mouse.y;
                 } else if (mouse.x > 250) { // If close to left paddle
@@ -69,7 +69,7 @@
                 console.log('up arrow key pressed!');
                 
                 // If hits the canvas border
-                if (p1.y != 0) {
+                if (p1.y != 0 + p1.r) {
                     p1.y += -5;
                 }
 				break;
@@ -79,7 +79,7 @@
 				console.log('down arrow key pressed!');
                 
                 // if hits the canvas border
-                if (p1.y + p1.height != 400) {
+                if (p1.y + p1.r != 400) {
                     p1.y += 5;
                 }
 				break;
@@ -107,7 +107,7 @@
                 console.log('W key pressed!');
                 
                 // If hits the canvas border
-                if (p2.y != 0) {
+                if (p2.y != 0 + p1.r) {
                     p2.y += -5;
                 }
 				break;
@@ -117,7 +117,7 @@
 				console.log('S key pressed!');
                 
                 // if hits the canvas border
-                if (p2.y + p2.height != 400) {
+                if (p2.y + p2.r != 400) {
                     p2.y += 5;
                 }
 				break;
@@ -242,8 +242,8 @@
 
         // Create ball object
         const b1 = new Ball(50, 50, 2, 2, 10);
-        const p1 = new Paddle(375, 175, 10);
-        const p2 = new Paddle(20, 175, 10);
+        const p1 = new Paddle(375, 200, 10);
+        const p2 = new Paddle(20, 200, 10);
         
         // A function to repeat every time the animation loops.
         function repeatme() {
@@ -259,11 +259,42 @@
 
             b1.rotate(); // Rotates the ball
 
+            collision();
+
             window.requestAnimationFrame(repeatme);
         }
         
         // Get the animation going.
         repeatme();
+
+        // Function to detect collisions
+        function collision() {
+            var ballX = b1.x;
+            var ballY = b1.y;
+            var paddleOneX = p1.x;
+            var paddleOneY = p1.y;
+            var paddleTwoX = p2.x;
+            var paddleTwoY = p2.y;
+            var p1Distance;
+            var p2Distance;
+
+            p1Distance = Math.sqrt(Math.pow((ballX - paddleOneX),2) + Math.pow((ballY - paddleOneY), 2));
+            p2Distance = Math.sqrt(Math.pow((ballX - paddleTwoX),2) + Math.pow((ballY - paddleTwoY), 2));
+
+            if(p1Distance < b1.r + p1.r) {
+                console.log("Collision detected.");
+                ctx.fillStyle = "black";
+                ctx.font = "15px Arial";
+                ctx.fillText("Collision Detected", 135, 50);
+            }
+
+            if(p2Distance < b1.r + p2.r) {
+                console.log("Collision detected.");
+                ctx.fillStyle = "black";
+                ctx.font = "15px Arial";
+                ctx.fillText("Collision Detected", 135, 50);
+            }
+        }
     </script>
 
   </body>
