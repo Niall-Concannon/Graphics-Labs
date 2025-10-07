@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+		canvas {
+			border: 1px solid grey; 
+		}
+    </style>
+
+  </head>
+
+  <body>
+
+    <h1>Niall Concannon</h1>
+
+    <canvas id="canvas-for-ball" width="400" height="400"></canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvas-for-ball");
+		// Get a 2D context for the canvas.
+		var ctx = canvas.getContext("2d");
+		// Make the fill style red.
+		ctx.fillStyle = "rgb(255, 0, 0)";
+
+        // Calculates the x,y position of the DOM in the canvas
+        var canvasPosition = {
+            x: canvas.offsetLeft,
+            y: canvas.offsetTop
+        }
+        
+        canvas.addEventListener("mousemove", function(event) { 
+            // To get the actual coordinates for mouse position - minus client by canvasPosition
+            var mouse = {
+                x: event.clientX - canvasPosition.x,
+                y: event.clientY - canvasPosition.y
+            }
+
+            // if statement to stop at bottom of the canvas
+            if (mouse.y < 340) {
+                if( mouse.x < 150) { // If close to right paddle
+                    p2.y = mouse.y;
+                } else if (mouse.x > 250) { // If close to left paddle
+                    p1.y = mouse.y;
+                }
+            }
+        });
+
+        // ---------- KEYBOARD CODE ----------        
+
+		// Add a Javascript event listener to the keypress event.
+		window.addEventListener("keypress", function(event) { 
+			// Just log the event to the console.
+			console.log(event);
+		});
+
+		//keypresses with jQuery
+		$(document.body).on('keydown', function(e) {
+			console.log(e.which);
+			switch (e.which) {
+            // Key code for up arrow
+            case 38:
+                console.log('up arrow key pressed!');
+                
+                // If hits the canvas border
+                if (p1.y != 0) {
+                    p1.y += -5;
+                }
+				break;
+
+            // key code for down arrow
+			case 40:
+				console.log('down arrow key pressed!');
+                
+                // if hits the canvas border
+                if (p1.y + p1.height != 400) {
+                    p1.y += 5;
+                }
+				break;
+
+            // key code for A key
+			case 65:
+				console.log('A key pressed!');
+                
+                // turn anticlockwise
+                rotate = false;
+                i += -0.1;
+				break;
+
+            // key code for down arrow
+			case 68:
+				console.log('D key pressed!');
+                
+                // turn clockwise
+                rotate = true;
+                i += 0.1;
+				break;
+
+            // Key code for W key
+            case 87:
+                console.log('W key pressed!');
+                
+                // If hits the canvas border
+                if (p2.y != 0) {
+                    p2.y += -5;
+                }
+				break;
+
+            // key code for S key
+			case 83:
+				console.log('S key pressed!');
+                
+                // if hits the canvas border
+                if (p2.y + p2.height != 400) {
+                    p2.y += 5;
+                }
+				break;
+			}
+		});
+
+        // ---------- BOUNCING BALL CODE ----------
+
+        // Variables for rotating the ball
+        var i = 0.1;
+        var rotate = true;
+        var clockwise = 0.1;
+        var anticlockwise = -0.1;
+        var gravity = 0.4;
+        
+        // Ball class
+        class Ball {
+            constructor(x, y, xspeed, yspeed, r) {
+                this.x = x;
+                this.y = y;
+                this.xspeed = xspeed;
+                this.yspeed = yspeed;
+                this.r = r;
+            }
+
+            // Move method used to move the ball
+            move() {
+                this.x += this.xspeed;
+                this.yspeed += gravity;
+                this.y += this.yspeed;
+                
+                // if ball hits top or bottom
+                if(this.y >= 400 - this.r) {
+                    this.y = 400 - this.r; // Reposition so it doesn't go out of border
+                    this.yspeed = -this.yspeed * 0.9; // slow down the speed with 0.9
+                } else if(this.y <= 0 + this.r) {
+                    this.y = 0 + this.r;
+                    this.yspeed = -this.yspeed * 0.9;
+                }
+
+                // if ball hits left or right
+                if(this.x >= 400 - this.r) {
+                    this.x = 400 -this.r; // Reposition so it doesn't go out of border
+                    this.xspeed = -this.xspeed * 0.5; // slow down the speed with 0.9
+                } else if(this.x <= 0 + this.r) {
+                    this.x = 0 + this.r;
+                    this.xspeed = -this.xspeed * 0.5;
+                }
+            }
+            
+            draw() {
+                ctx.fillStyle = "rgb(255,255,0)";
+                // Pacman circle
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.arc(this.x, this.y, this.r, (7*Math.PI)/4+i,(5*Math.PI)/4+i,false);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Pacman mouth
+                ctx.beginPath();
+                ctx.moveTo(this.x,this.y);
+                var xline = (this.r * Math.cos((5*Math.PI)/4+i)) + this.x;
+                var yline = (this.r * Math.sin((5*Math.PI)/4+i)) + this.y;
+                ctx.lineTo(xline, yline);
+                ctx.moveTo(this.x,this.y);
+                var xline = (this.r * Math.cos((7*Math.PI)/4+i)) + this.x;
+                var yline = (this.r * Math.sin((7*Math.PI)/4+i)) + this.y;
+                ctx.lineTo(xline, yline);
+                ctx.stroke();
+
+                // if statement to check whether to rotate clockwise or anticlockwise based on the boolean value
+                if (rotate == true) {
+                    i += clockwise;
+                } else if (rotate == false) {
+                    i += anticlockwise;
+                }
+            }
+
+            // Rotate method rotates the ball clockwise or anticlockwise when ball hits the canvas border
+            rotate() {
+                // if ball hits border top or bottom
+                // Made it so when the yspeed of the ball is around 0 it stops rotating it to prevent it from being in a static position
+                if ((this.yspeed > 0.4 || this.yspeed < -0.4) && (this.y == 400 - this.r || this.y == 0 + this.r)) {
+                    // if clockwise make anticlockwise
+                    if (rotate == true) {
+                        rotate = false;
+                    } 
+                    // else if anticlockwise make clockwise
+                    else if (rotate == false) {
+                        rotate = true;
+                    }
+                } else if (this.x == 400 - this.r || this.x == 0 + this.r) { // left or right of canvas
+                    // if clockwise make anticlockwise
+                    if (rotate == true) {
+                        rotate = false;
+                    } 
+                    // else if anticlockwise make clockwise
+                    else if (rotate == false) {
+                        rotate = true;
+                    }
+                }
+            }
+        }
+
+        // Paddle class
+        class Paddle {
+            constructor(x, y, r) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+            }
+
+            // Draws the paddles
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+                ctx.stroke();
+            }
+        }
+
+        // Create ball object
+        const b1 = new Ball(50, 50, 2, 2, 10);
+        const p1 = new Paddle(375, 175, 10);
+        const p2 = new Paddle(20, 175, 10);
+        
+        // A function to repeat every time the animation loops.
+        function repeatme() {
+            ctx.clearRect(0, 0, 400, 400); // Clear the canvas everytime
+            
+            p1.draw(); // Draw the first paddle (right one)
+
+            p2.draw(); // Draw second paddle (left one)
+            
+            b1.draw(); // Draw the ball (stroked, not filled).
+            
+            b1.move(); // Update the y location.
+
+            b1.rotate(); // Rotates the ball
+
+            window.requestAnimationFrame(repeatme);
+        }
+        
+        // Get the animation going.
+        repeatme();
+    </script>
+
+  </body>
+
+</html>
