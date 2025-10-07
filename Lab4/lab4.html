@@ -286,13 +286,18 @@
                 ctx.fillStyle = "black";
                 ctx.font = "15px Arial";
                 ctx.fillText("Collision Detected", 135, 50);
-            }
+                
+                b1.yspeed = -b1.yspeed * 1.2;
+                b1.xspeed = -b1.xspeed * 1.6;
 
-            if(p2Distance < b1.r + p2.r) {
+            } else if(p2Distance < b1.r + p2.r) {
                 console.log("Collision detected.");
                 ctx.fillStyle = "black";
                 ctx.font = "15px Arial";
                 ctx.fillText("Collision Detected", 135, 50);
+
+                b1.yspeed = -b1.yspeed * 1.2;
+                b1.xspeed = -b1.xspeed * 1.6;
             }
         }
     </script>
