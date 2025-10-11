@@ -135,6 +135,7 @@
         var rotate = true;
         var clockwise = 0.1;
         var anticlockwise = -0.1;
+        var timeout = false;
         
         // Ball class
         class Ball {
@@ -280,12 +281,20 @@
                 ctx.fillText("Collision Detected", 135, 50);
                 
                 // Speed up the ball overtime
-                b1.yspeed = -b1.yspeed * 1.05;
+                // Check what if the ball hit top or bottom of paddle
+                if (p1.y > b1.y) {
+                    b1.yspeed = -b1.yspeed * 1.05;
+                } else if (p1.y < b1.y) {
+                    b1.yspeed = b1.yspeed * 1.05;
+                }
+
                 b1.xspeed = -b1.xspeed * 1.05;
 
-                p1.score++;
-                document.getElementById("rightscore").textContent = "Right Paddle: " + p1.score;
-
+                if (!timeout) {
+                    p1.score++;
+                    timeout = true;
+                    setTimeout(() => timeout = false, 100); // Make timeout false again after 100ms
+                }
             } else if (p2Distance < b1.r + p2.r) {
                 console.log("Collision detected.");
                 ctx.fillStyle = "black";
@@ -293,16 +302,31 @@
                 ctx.fillText("Collision Detected", 135, 50);
 
                 // Speed up the ball time
-                b1.yspeed = -b1.yspeed * 1.05;
+                // Check what if the ball hit top or bottom of paddle
+                if (p2.y > b1.y) {
+                    b1.yspeed = -b1.yspeed * 1.05;
+                } else if (p2.y < b1.y) {
+                    b1.yspeed = b1.yspeed * 1.05;
+                }
+                
                 b1.xspeed = -b1.xspeed * 1.05;
 
-                p2.score++;
+                if (!timeout) {
+                    p2.score++;
+                    timeout = true;
+                    setTimeout(() => timeout = false, 100);
+                }
             } else {
                 // if ball hits left or right
-                if(b1.x >= 400 - b1.r && p1.score > 0) {
+                if(b1.x >= 400 - b1.r && p1.score > 0 && !timeout) {
                     p1.score--;
-                } else if(b1.x <= 0 + b1.r && p2.score > 0) {
+                    timeout = true;
+                    setTimeout(() => timeout = false, 100);
+
+                } else if(b1.x <= 0 + b1.r && p2.score > 0 && !timeout) {
                     p2.score--;
+                    timeout = true;
+                    setTimeout(() => timeout = false, 100);
                 }
             }
 
