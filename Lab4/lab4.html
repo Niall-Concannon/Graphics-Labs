@@ -172,7 +172,13 @@
             }
             
             draw() {
-                ctx.fillStyle = "rgb(255,255,0)";
+                // Create gradient
+                const grad = ctx.createRadialGradient(this.x ,this.y ,this.r ,this.x ,this.y ,this.r/8);
+                grad.addColorStop(0,"yellow");
+                grad.addColorStop(1,"red");
+
+                // Fill rectangle with gradient
+                ctx.fillStyle = grad;
                 // Pacman circle
                 ctx.beginPath();
                 ctx.moveTo(this.x, this.y);
@@ -228,7 +234,15 @@
             // Draws the paddles
             draw() {
                 ctx.beginPath();
+                // Create gradient
+                const grad = ctx.createRadialGradient(this.x ,this.y ,this.r ,this.x ,this.y ,this.r/4);
+                grad.addColorStop(0,"blue");
+                grad.addColorStop(1,"green");
+
+                // Fill rectangle with gradient
+                ctx.fillStyle = grad;
                 ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+                ctx.fill();
                 ctx.stroke();
             }
         }
