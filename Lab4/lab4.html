@@ -21,6 +21,10 @@
 
     <canvas id="canvas-for-ball" width="400" height="400"></canvas>
 
+    <h2>Score:</h2>
+    <p id="rightscore">Right Paddle: 0</p>
+    <p id="leftscore">Left Paddle: 0</p>
+
     <script type="text/javascript">
 		// Gets a handle to the element with id canvasOne.
 		var canvas = document.getElementById("canvas-for-ball");
@@ -131,7 +135,6 @@
         var rotate = true;
         var clockwise = 0.1;
         var anticlockwise = -0.1;
-        var gravity = 0.4;
         
         // Ball class
         class Ball {
@@ -146,25 +149,24 @@
             // Move method used to move the ball
             move() {
                 this.x += this.xspeed;
-                this.yspeed += gravity;
                 this.y += this.yspeed;
                 
                 // if ball hits top or bottom
                 if(this.y >= 400 - this.r) {
                     this.y = 400 - this.r; // Reposition so it doesn't go out of border
-                    this.yspeed = -this.yspeed * 0.9; // slow down the speed with 0.9
+                    this.yspeed = -this.yspeed * 1; // Progressively faster
                 } else if(this.y <= 0 + this.r) {
                     this.y = 0 + this.r;
-                    this.yspeed = -this.yspeed * 0.9;
+                    this.yspeed = -this.yspeed * 1;
                 }
 
                 // if ball hits left or right
                 if(this.x >= 400 - this.r) {
                     this.x = 400 -this.r; // Reposition so it doesn't go out of border
-                    this.xspeed = -this.xspeed * 0.5; // slow down the speed with 0.9
+                    this.xspeed = -this.xspeed * 1;
                 } else if(this.x <= 0 + this.r) {
                     this.x = 0 + this.r;
-                    this.xspeed = -this.xspeed * 0.5;
+                    this.xspeed = -this.xspeed * 1;
                 }
             }
             
@@ -200,18 +202,7 @@
 
             // Rotate method rotates the ball clockwise or anticlockwise when ball hits the canvas border
             rotate() {
-                // if ball hits border top or bottom
-                // Made it so when the yspeed of the ball is around 0 it stops rotating it to prevent it from being in a static position
-                if ((this.yspeed > 0.4 || this.yspeed < -0.4) && (this.y == 400 - this.r || this.y == 0 + this.r)) {
-                    // if clockwise make anticlockwise
-                    if (rotate == true) {
-                        rotate = false;
-                    } 
-                    // else if anticlockwise make clockwise
-                    else if (rotate == false) {
-                        rotate = true;
-                    }
-                } else if (this.x == 400 - this.r || this.x == 0 + this.r) { // left or right of canvas
+                if (this.y == 600 -this.r || this.y == 0 + this.r || this.x == 400 - this.r || this.x == 0 + this.r) {
                     // if clockwise make anticlockwise
                     if (rotate == true) {
                         rotate = false;
@@ -226,10 +217,11 @@
 
         // Paddle class
         class Paddle {
-            constructor(x, y, r) {
+            constructor(x, y, r, score) {
                 this.x = x;
                 this.y = y;
                 this.r = r;
+                this.score = score;
             }
 
             // Draws the paddles
@@ -241,9 +233,9 @@
         }
 
         // Create ball object
-        const b1 = new Ball(50, 50, 2, 2, 10);
-        const p1 = new Paddle(375, 200, 10);
-        const p2 = new Paddle(20, 200, 10);
+        const b1 = new Ball(50, 20, 2, 2, 10);
+        const p1 = new Paddle(375, 200, 10, 0);
+        const p2 = new Paddle(20, 200, 10, 0);
         
         // A function to repeat every time the animation loops.
         function repeatme() {
@@ -259,7 +251,7 @@
 
             b1.rotate(); // Rotates the ball
 
-            collision();
+            collision(); // Detect for collisions
 
             window.requestAnimationFrame(repeatme);
         }
@@ -281,24 +273,42 @@
             p1Distance = Math.sqrt(Math.pow((ballX - paddleOneX),2) + Math.pow((ballY - paddleOneY), 2));
             p2Distance = Math.sqrt(Math.pow((ballX - paddleTwoX),2) + Math.pow((ballY - paddleTwoY), 2));
 
-            if(p1Distance < b1.r + p1.r) {
+            if (p1Distance < b1.r + p1.r) {
                 console.log("Collision detected.");
                 ctx.fillStyle = "black";
                 ctx.font = "15px Arial";
                 ctx.fillText("Collision Detected", 135, 50);
                 
-                b1.yspeed = -b1.yspeed * 1.2;
-                b1.xspeed = -b1.xspeed * 1.6;
+                // Speed up the ball overtime
+                b1.yspeed = -b1.yspeed * 1.05;
+                b1.xspeed = -b1.xspeed * 1.05;
 
-            } else if(p2Distance < b1.r + p2.r) {
+                p1.score++;
+                document.getElementById("rightscore").textContent = "Right Paddle: " + p1.score;
+
+            } else if (p2Distance < b1.r + p2.r) {
                 console.log("Collision detected.");
                 ctx.fillStyle = "black";
                 ctx.font = "15px Arial";
                 ctx.fillText("Collision Detected", 135, 50);
 
-                b1.yspeed = -b1.yspeed * 1.2;
-                b1.xspeed = -b1.xspeed * 1.6;
+                // Speed up the ball time
+                b1.yspeed = -b1.yspeed * 1.05;
+                b1.xspeed = -b1.xspeed * 1.05;
+
+                p2.score++;
+            } else {
+                // if ball hits left or right
+                if(b1.x >= 400 - b1.r && p1.score > 0) {
+                    p1.score--;
+                } else if(b1.x <= 0 + b1.r && p2.score > 0) {
+                    p2.score--;
+                }
             }
+
+            // Get the score values
+            document.getElementById("rightscore").textContent = "Right Paddle: " + p1.score;
+            document.getElementById("leftscore").textContent = "Left Paddle: " + p2.score;
         }
     </script>
 
