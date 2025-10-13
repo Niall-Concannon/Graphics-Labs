@@ -27,29 +27,43 @@
         document.body.appendChild(renderer.domElement);
 
         // Add sphere
-        const geometry = new THREE.SphereGeometry( 1, 32, 32 ); 
-        const material = new THREE.MeshLambertMaterial( { color: 0x0077ff } ); 
-        const sphere = new THREE.Mesh(geometry, material);
-        scene.add(sphere);
+        // const geometry = new THREE.SphereGeometry( 1, 32, 32 ); 
+        // const material = new THREE.MeshLambertMaterial( { color: 0x0077ff } ); 
+        // const sphere = new THREE.Mesh(geometry, material);
+        // scene.add(sphere);
 
         var spotLight = new THREE.SpotLight(0xffffff);
         spotLight.position.set(1, 0.5, 1);
         scene.add(spotLight);
 
-        var direction = 0.01;
+        class Sphere {
+            constructor() {
+                this.geometry = new THREE.SphereGeometry( 1, 32, 32 );
+                this.material = new THREE.MeshLambertMaterial( { color: 0x0077ff } );
+                this.sphere = new THREE.Mesh(this.geometry, this.material);
+                this.direction = 0.01;
+                scene.add(this.sphere);
+            }
+        
+            move() {
+                // Code to rotate sphere
+                this.sphere.rotation.x += 0.01;
+                this.sphere.rotation.y += 0.01;
+
+                this.sphere.position.x += this.direction;
+
+                if (this.sphere.position.x > 2 || this.sphere.position.x < -2) {
+                    this.direction = -this.direction;
+                }
+            }
+        }
+
+        const s1 = new Sphere();
 
         function repeatMe() {            
             renderer.render(scene, camera);
             
-            // Code to rotate sphere
-            sphere.rotation.x += 0.01;
-            sphere.rotation.y += 0.01;
-
-            sphere.position.x += direction;
-
-            if (sphere.position.x > 2 || sphere.position.x < -2) {
-                direction = -direction;
-            }
+            s1.move();
 
             requestAnimationFrame(repeatMe);
         }
