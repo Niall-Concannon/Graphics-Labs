@@ -36,6 +36,7 @@
         spotLight.position.set(1, 0.5, 1);
         scene.add(spotLight);
 
+        var direction = 0.01;
 
         function repeatMe() {            
             renderer.render(scene, camera);
@@ -43,6 +44,12 @@
             // Code to rotate sphere
             sphere.rotation.x += 0.01;
             sphere.rotation.y += 0.01;
+
+            sphere.position.x += direction;
+
+            if (sphere.position.x > 2 || sphere.position.x < -2) {
+                direction = -direction;
+            }
 
             requestAnimationFrame(repeatMe);
         }
