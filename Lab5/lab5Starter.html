@@ -20,29 +20,29 @@
         var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
         // Set camera position
         camera.position.z = 5;
-        const helper = new THREE.CameraHelper( camera );
-        scene.add( helper );
 
         // Implement renderer - Create a WebGL renderer for rendering the scene.
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled= true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.body.appendChild(renderer.domElement);
 
-        // Add sphere
-        // const geometry = new THREE.SphereGeometry( 1, 32, 32 ); 
-        // const material = new THREE.MeshLambertMaterial( { color: 0x0077ff } ); 
-        // const sphere = new THREE.Mesh(geometry, material);
-        // scene.add(sphere);
-
+        // Create spotlight
         var spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(1, 0.5, 1);
+        spotLight.position.set(5, 10, 5);
+        spotLight.castShadow = true;
         scene.add(spotLight);
 
-        const geometry = new THREE.PlaneGeometry( 2, 2 );
+        const helper = new THREE.CameraHelper( spotLight.shadow.camera );
+        scene.add( helper );
+
+        const geometry = new THREE.PlaneGeometry( 4, 4 );
         const material = new THREE.MeshLambertMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
         const plane = new THREE.Mesh( geometry, material );
         plane.rotation.x = -Math.PI/2;
         plane.position.y = -2;
+        plane.receiveShadow = true;
         scene.add( plane );
         
 
@@ -51,6 +51,7 @@
                 this.geometry = new THREE.SphereGeometry( 1, 32, 32 );
                 this.material = new THREE.MeshLambertMaterial( { color: 0x0077ff } );
                 this.sphere = new THREE.Mesh(this.geometry, this.material);
+                this.sphere.castShadow = true;
                 this.direction = 0.01;
                 scene.add(this.sphere);
             }
