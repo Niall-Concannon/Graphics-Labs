@@ -11,6 +11,8 @@
 </head>
 
 <body>
+    <h1>Niall Concannon</h1>
+    
     <script type="text/javascript">
         
         // Implement scene - Create a Three.js scene to hold objects.
@@ -53,6 +55,9 @@
                 this.sphere = new THREE.Mesh(this.geometry, this.material);
                 this.sphere.castShadow = true;
                 this.direction = 0.01;
+                this.position = this.sphere.position;
+                this.yspeed = 0;
+                this.gravity = -0.01;
                 scene.add(this.sphere);
             }
         
@@ -61,9 +66,22 @@
                 this.sphere.rotation.x += 0.01;
                 this.sphere.rotation.y += 0.01;
 
+                this.yspeed += this.gravity;
+                this.position.y += this.yspeed;
+
+                //Code for bounce
+                if (this.position.y - 1 <= plane.position.y) {
+                    // Once sphere is on plane keep the position above the plane
+                    this.position.y = plane.position.y + 1;
+
+                    // Gravity code
+                    this.yspeed = -this.yspeed * 0.8;
+                }
+
+                // Code to move sphere left and right
                 this.sphere.position.x += this.direction;
 
-                if (this.sphere.position.x > 2 || this.sphere.position.x < -2) {
+                if (this.sphere.position.x > 1 || this.sphere.position.x < -1) {
                     this.direction = -this.direction;
                 }
             }
