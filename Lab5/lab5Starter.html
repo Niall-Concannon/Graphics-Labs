@@ -21,7 +21,8 @@
         // Create a camera with specified properties.
         var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
         // Set camera position
-        camera.position.z = 5;
+        camera.position.z = 8;
+        camera.position.y = 1;
 
         // Implement renderer - Create a WebGL renderer for rendering the scene.
         var renderer = new THREE.WebGLRenderer();
@@ -39,7 +40,7 @@
         const helper = new THREE.CameraHelper( spotLight.shadow.camera );
         scene.add( helper );
 
-        const geometry = new THREE.PlaneGeometry( 4, 4 );
+        const geometry = new THREE.PlaneGeometry( 5, 5 );
         const material = new THREE.MeshLambertMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
         const plane = new THREE.Mesh( geometry, material );
         plane.rotation.x = -Math.PI/2;
@@ -49,15 +50,17 @@
         
 
         class Sphere {
-            constructor() {
+            constructor(x, y, xspeed) {
                 this.geometry = new THREE.SphereGeometry( 1, 32, 32 );
                 this.material = new THREE.MeshLambertMaterial( { color: 0x0077ff } );
                 this.sphere = new THREE.Mesh(this.geometry, this.material);
                 this.sphere.castShadow = true;
-                this.direction = 0.01;
                 this.position = this.sphere.position;
                 this.yspeed = 0;
                 this.gravity = -0.01;
+                this.position.x = x;
+                this.position.y = y;
+                this.xspeed = xspeed;
                 scene.add(this.sphere);
             }
         
@@ -79,20 +82,69 @@
                 }
 
                 // Code to move sphere left and right
-                this.sphere.position.x += this.direction;
+                this.sphere.position.x += this.xspeed;
 
-                if (this.sphere.position.x > 1 || this.sphere.position.x < -1) {
-                    this.direction = -this.direction;
+                if (this.sphere.position.x > 2 || this.sphere.position.x < -2) {
+                    this.xspeed = -this.xspeed;
                 }
             }
         }
 
-        const s1 = new Sphere();
+        const s1 = new Sphere(0, 1, 0.03);
+        const s2 = new Sphere(0, 4, -0.03);
+
+        function collisions(s1, s2) {
+            // Get spheres positions
+            var s1X = s1.position.x;
+            var s1Y = s1.position.y;
+            var s1Z = s1.position.z;
+            var s2X = s2.position.x;
+            var s2Y = s2.position.y;
+            var s2Z = s2.position.z;
+
+            var radius = 2;
+
+            // Get the distance between spheres
+            var distance = Math.sqrt(Math.pow((s1X - s2X), 2) + Math.pow((s1Y - s2Y), 2) + Math.pow((s1Z - s2Z), 2));
+
+            // Calculate difference on x axis to decide push direction
+            var xDistance = s1X - s2X;
+
+            if (distance < radius) {
+                // Reverse xspeed
+                if (s1.xspeed > 0) {
+                    s1.xspeed = -s1.xspeed;
+                } else if (s1.xspeed < 0) {
+                    s1.xspeed = -s1.xspeed;
+                }
+
+                // Reverse xspeed
+                if (s2.xspeed > 0) {
+                    s2.xspeed = -s2.xspeed;
+                } else if (s2.xspeed < 0) {
+                    s2.xspeed = -s2.xspeed;
+                }
+
+                // Stop spheres overlapping
+                if (xDistance > 0) {
+                    // Move to the distance of (radius - distance)
+                    s1.position.x = s1X + (radius - distance);
+                    s2.position.x = s2X - (radius - distance);
+                } else {
+                    s1.position.x = s1X - (radius - distance);
+                    s2.position.x = s2X + (radius - distance);
+                }
+            }
+        }
 
         function repeatMe() {            
             renderer.render(scene, camera);
             
             s1.move();
+            s2.move();
+
+            // Collision check
+            collisions(s1, s2)
 
             requestAnimationFrame(repeatMe);
         }
