@@ -21,8 +21,8 @@
         // Create a camera with specified properties.
         var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
         // Set camera position
-        camera.position.z = 8;
-        camera.position.y = 1;
+        camera.position.z = 12;
+        camera.position.y = 3;
 
         // Implement renderer - Create a WebGL renderer for rendering the scene.
         var renderer = new THREE.WebGLRenderer();
@@ -40,17 +40,25 @@
         const helper = new THREE.CameraHelper( spotLight.shadow.camera );
         scene.add( helper );
 
-        const geometry = new THREE.PlaneGeometry( 5, 5 );
+        // Make the plane
+        const geometry = new THREE.PlaneGeometry( 10, 10 );
         const material = new THREE.MeshLambertMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
         const plane = new THREE.Mesh( geometry, material );
         plane.rotation.x = -Math.PI/2;
         plane.position.y = -2;
         plane.receiveShadow = true;
         scene.add( plane );
+
+        // Transparent cube (box)
+        const cubeGeometry = new THREE.BoxGeometry( 6, 6, 6 ); 
+        const cubeMaterial = new THREE.MeshStandardMaterial( {transparent: true, opacity: 0.2, side: THREE.BackSide} ); 
+        const cube = new THREE.Mesh( cubeGeometry, cubeMaterial ); 
+        cube.position.y = 1;
+        scene.add(cube);
         
 
         class Sphere {
-            constructor(x, y, xspeed) {
+            constructor(x, y, xspeed, insideCube) {
                 this.geometry = new THREE.SphereGeometry( 1, 32, 32 );
                 this.material = new THREE.MeshLambertMaterial( { color: 0x0077ff } );
                 this.sphere = new THREE.Mesh(this.geometry, this.material);
@@ -61,6 +69,17 @@
                 this.position.x = x;
                 this.position.y = y;
                 this.xspeed = xspeed;
+                this.yspeed = 0;
+                this.zspeed = 0.03;
+                this.insideCube = insideCube;
+                // Set gravity depending on whether it bounces in cube or not
+                if (insideCube) {
+                    this.gravity = 0; // No gravity inside the cube
+                    this.zspeed = 0.03;
+                } else {
+                    this.gravity = -0.01; // Falls to the ground
+                    this.zspeed = 0;
+                }
                 scene.add(this.sphere);
             }
         
@@ -72,26 +91,43 @@
                 this.yspeed += this.gravity;
                 this.position.y += this.yspeed;
 
-                //Code for bounce
-                if (this.position.y - 1 <= plane.position.y) {
-                    // Once sphere is on plane keep the position above the plane
-                    this.position.y = plane.position.y + 1;
+                this.position.x += this.xspeed;
+                this.position.z += this.zspeed;
 
-                    // Gravity code
-                    this.yspeed = -this.yspeed * 0.8;
-                }
+                if (this.insideCube == true) {
+                    var cubeBorder = 3;
 
-                // Code to move sphere left and right
-                this.sphere.position.x += this.xspeed;
+                    // If hits x axis reverse xspeed
+                    if (this.position.x > cubeBorder - 1 || this.position.x < -cubeBorder + 1) {
+                        this.xspeed = -this.xspeed;
+                    }
 
-                if (this.sphere.position.x > 2 || this.sphere.position.x < -2) {
-                    this.xspeed = -this.xspeed;
+                    // If hits z axis reverse zspeed
+                    if (this.position.z > cubeBorder - 1 || this.position.z < -cubeBorder + 1) {
+                        this.zspeed = -this.zspeed;
+                    }
+                } else {
+                    //Code for bounce
+                    if (this.position.y - 1 <= plane.position.y) {
+                        // Once sphere is on plane keep the position above the plane
+                        this.position.y = plane.position.y + 1;
+                        
+                        // Gravity code
+                        this.yspeed = -this.yspeed * 0.8;
+                    }
+
+                    // Code to move sphere left and right
+                    this.sphere.position.x += this.xspeed;
+
+                    if (this.position.x > 2 || this.position.x < -2) {
+                        this.xspeed = -this.xspeed;
+                    }
                 }
             }
         }
 
-        const s1 = new Sphere(0, 1, 0.03);
-        const s2 = new Sphere(0, 4, -0.03);
+        const s1 = new Sphere(0, 1, 0.03, false);
+        const s2 = new Sphere(0, 1, -0.03, true);
 
         function collisions(s1, s2) {
             // Get spheres positions
