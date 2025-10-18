@@ -76,6 +76,12 @@
                 if (insideCube) {
                     this.gravity = 0; // No gravity inside the cube
                     this.zspeed = 0.03;
+
+                    // Add wireframe to the sphere
+                    var wireframeMaterial = new THREE.MeshBasicMaterial( { wireframe: true } );
+                    var wireframe = new THREE.Mesh(this.geometry, wireframeMaterial);
+                    this.sphere.add(wireframe);
+                    
                 } else {
                     this.gravity = -0.01; // Falls to the ground
                     this.zspeed = 0;
